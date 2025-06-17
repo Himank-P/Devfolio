@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe Cards</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #000c1d;
+            font-family: Arial, sans-serif;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin: 0px;
+            color: white;
+            animation: fadeIn 1s ease-in-out;
+            padding-right: 10px;
+        }
+
+        /*For Image Cards*/
+        .container {
+            position: relative;
+            left: 420px;
+            top: 100px;
+            width: 100vw;
+            height: 650px;
+        }
+
+        .card {
+            position: absolute;
+            width: 350px;
+            height: 500px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out, left 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            touch-action: none;
+            overflow: hidden;
+        }
+
+        .card.hover-effect:hover {
+            transform: scale(1.05);
+            z-index: 1000;
+        }
+
+
+        .card img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        #locationtag{
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover #locationtag{
+            opacity: 1;
+        }
+
+
+        /*For Navbar*/
+        .navbar {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            z-index: 1000;
+        }
+        .navbar ul {
+            width: 100%;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar ul li {
+            flex:1;
+            text-align: center;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .menu-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+            padding: 0 10px;
+            width: 100vw;
+        }
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: #222;
+            padding-top: 60px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .side-nav a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .side-nav a:hover {
+            background: #444;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /*Footer*/
+        .footer {
+            position: relative;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-top: 10px;
+            border-top: 10px solid #444; /* Added uniform border */
+        }
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 24px;
+        }
+        .footer-links a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 10px;
+        }
+        .scroll-to-top {
+            position: absolute;
+            top: -40px; /* Adjusted to blend better with footer */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: #444;
+            border-top-left-radius: 80px;
+            border-top-right-radius: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-bottom: 5px solid #444; /* Smooth transition into footer */
+        }
+        .scroll-to-top span {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+
+        /*Glowing Border Divs*/
+        .glowing-box {
+            display: flex;
+            background: linear-gradient(135deg, rgba(90, 0, 212, 0.3), rgba(27, 1, 49, 0.8));
+            flex-direction: column;
+            position: absolute;
+            transform: translate(-100%, 0);
+            z-index: 100;
+            left:0px;
+            width: 350px;
+            height: 500px;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: white;
+            font-family: Arial, sans-serif;
+            border: 5px solid #0077ff;
+            border-radius: 15px;
+            animation: glow 3s infinite alternate;
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.8);
+        }
+
+        .glowing-box button{
+            margin-top: 40px;
+            width: 90%;
+            padding: 12px 20px;
+            background-color: #5a00d4;
+            color: #000;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .glowing-box button:hover{
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 102, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(0, 102, 255, 1);
+            }
+        }
+
+
+        /*Cursor Glow*/
+        .glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.4) 0%, rgba(0, 123, 255, 0) 80%);
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0;
+            transition: opacity 0.2s ease-out, transform 0.1s linear;
+            border-radius: 50%;
+        }
+
+        /*Signature*/
+        #signature{
+            height: 50px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        #signature2{
+            width: 100%;
+        }
+        #signature2span{
+            position: absolute;
+            bottom: 0px;
+            width:100%;
+        }
+
+        #signature3{
+            height: 36px;
+            margin: 0 10px;
+            display: none;
+        }
+
+        @media screen and (max-width: 900px) {
+            .navbar ul {
+                display: none;
+            }
+            .menu-icon {
+                display: block;
+            }
+            #signature3{
+                display: block;
+            }
+        }
+
+
+        #mainsection{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 20px;
+            gap: 10px;
+            flex-direction: row;
+        }
+        #mainimage{
+            max-width: 300px;
+            margin: 10px 10px 0 0;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1),
+            0px 4px 10px rgba(255, 255, 255, 0.1),
+            0px 4px 10px rgba(255, 255, 255, 0.1),
+            0px 4px 10px rgba(255, 255, 255, 0.1),
+            0px 4px 10px rgba(255, 255, 255, 0.1),
+            0px 4px 10px rgba(255, 255, 255, 0.1);
+
+        }
+        #mainsection #heading{
+            display: inline-block;
+            margin: 0px 20px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        #mainsection #intro{
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #bedaf0;
+            margin: 20px;
+        }
+        #ctabuttons{
+            display: flex;
+            gap: 20px;
+            margin: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        #ctabuttons button{
+            padding: 12px 20px;
+            background-color: #5a00d4;
+            color: #000;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            width: 50%;
+            border: none;
+            min-width: 150px;
+            flex-shrink: 0;
+        }
+        #ctabuttons button:hover{
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        #aboutme{
+            margin: 10px 20px;
+            margin-top:30px;
+            background: linear-gradient(135deg, rgba(90, 0, 212, 0.3), rgba(27, 1, 49, 0.8));
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow:  0 0 10px rgba(138, 43, 226, 0.7),
+            0 0 10px rgba(138, 43, 226, 0.7),
+            0 0 10px rgba(138, 43, 226, 0.7),
+            0 0 10px rgba(138, 43, 226, 0.7);
+            text-align: center;
+        }
+        #aboutme #heading{
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff007f,
+            0 0 10px #ff007f;
+            margin-bottom: 15px;
+        }
+        #aboutme #intro{
+            font-size: 1.2rem;
+            color: #bedaf0;
+            line-height: 1.2;
+            text-align: left;
+        }
+        #aboutme #readmore{
+            background-color: #5a00d4;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            max-width: 20vw;
+            min-width: 400px;
+            margin-top: 15px;
+            border: none;
+        }
+        #aboutme #readmore:hover{
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        #projectsheading{
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-left: 30px;
+            text-align: left;
+            text-shadow: 0 0 10px #5a00d4, 0 0 20px #8a2be2;
+        }
+        #projects{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        #project{
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 7px rgba(138, 43, 226, 0.6),
+            0 0 7px rgba(138, 43, 226, 0.6),
+            0 0 7px rgba(138, 43, 226, 0.6);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        #project:hover{
+            transform: scale(1.05);
+        }
+        #project img{
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 12, 29, 0.9); /* Translucent cyberpunk dark blue */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            text-align: center;
+            border-radius: 12px;
+        }
+        #project:hover .project-overlay {
+            opacity: 1;
+        }
+        .project-overlay h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #ffffff;
+        }
+        .project-overlay p {
+            font-size: 1rem;
+            color: #79a8ff;
+            margin-bottom: 15px;
+            padding: 0 15px;
+        }
+        .project-overlay a {
+            color: #ff007f;
+            font-size: 2rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        .project-overlay a:hover {
+            transform: scale(1.2);
+            color: #00eaff; /* Neon Cyan */
+        }
+
+        .tech-stack-section {
+            text-align: center;
+            padding: 50px 20px;
+            width: 95%;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            padding-top: 20px;
+        }
+        .tech-tile {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .heading-tile {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #5a00d4, #8a2be2);
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-radius: 12px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .tech-tile:hover .overlay {
+            opacity: 1;
+        }
+        .tech-tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
+        }
+
+
+        .section-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #5a00d4, #8a2be2);
+            border: none;
+            margin: 30px 0;
+            left: -10px;
+            position: relative;
+        }
+        button{
+            max-width: 20vw;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #mainsection {
+                flex-direction: column;
+            }
+            #mainimage {
+                max-width: 80%;
+            }
+
+            #heading {
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            #intro {
+                text-align: center;
+            }
+
+            #ctabuttons {
+                justify-content: center;
+            }
+            #ctabuttons button{
+                width: 100%;
+            }
+            }
+
+        .social-links a i{
+    transition: all 0.2s ease;
+}
+.social-links a i:hover{
+    scale: 1.3;
+}
+    </style>
+</head>
+<body>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!--Cursor Glow-->
+<div class="glow"></div>
+
+
+<!--For Navbar-->
+<div class="navbar" id="navbar">
+    <span class="menu-icon" onclick="openNav()">&#9776;</span>
+    <img src="Assets/signature.png" id="signature3" style="position: relative; right: 0px;" onclick="homepagenavigate()">
+    <ul>
+        <li><a href="aboutme.html">About Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><a href="projects.html">Projects&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><img src="Assets/signature.png" id="signature" onclick="homepagenavigate()"></li>
+        <li><a href="e&a.html">Experience & Achievements</a></li>
+        <li><a href="contactme.html">Contact Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+    </ul>
+</div>
+
+<div class="side-nav" id="sideNav">
+    <span class="close-btn" onclick="closeNav()">&times;</span>
+    <a href="index.htmln">Home</a>
+    <a href="aboutme.html">About Me</a>
+    <a href="projects.html">Projects</a>
+    <a href="e&a.html">Experience & Achievements</a>
+    <a href="contactme.html">Contact Me</a>
+    <a id="signature2span"><img src="Assets/signature.png" id="signature2" onclick="homepagenavigate()"></a>
+</div>
+
+
+<div id="mainbody">
+    <div id="mainsection">
+        <img src="Assets/mainimage.jpg" id="mainimage">
+        <div id="content">
+            <div id="heading">Hey, I'm Himank👋 | Software Engineer & Full-Stack Developer</div>
+            <div id="intro">Building seamless, high-performance applications with React, Vanilla Javascript & Python—while bringing creative ideas to life through design and photography.</div>
+            <div id="ctabuttons">
+                <button id="projectsbtn">View Projects</button>
+                <button id="contactmebtn">Contact Me</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="tech-stack-section">
+        <!-- Heading as a Tile -->
+        <div class="tech-tile heading-tile">
+            <h2>⚡ Tech & Skill Stack</h2>
+        </div>
+
+        <div class="tech-stack">
+            <!-- HTML -->
+            <div class="tech-tile" style="background-image: url('Assets/html.jpeg');">
+                <div class="overlay">
+                    <p>HTML5 🏗️</p>
+                    <span>Proficiency: 95%</span>
+                </div>
+            </div>
+
+            <!-- CSS -->
+            <div class="tech-tile" style="background-image: url('Assets/css.jpeg');">
+                <div class="overlay">
+                    <p>CSS3 🎨</p>
+                    <span>Proficiency: 90%</span>
+                </div>
+            </div>
+
+            <!-- JavaScript -->
+            <div class="tech-tile" style="background-image: url('Assets/javascript.jpeg');">
+                <div class="overlay">
+                    <p>JavaScript 🟨</p>
+                    <span>Proficiency: 85%</span>
+                </div>
+            </div>
+
+            <!-- React.js -->
+            <div class="tech-tile" style="background-image: url('Assets/react.jpeg');">
+                <div class="overlay">
+                    <p>React ⚛️</p>
+                    <span>Proficiency: 90%</span>
+                </div>
+            </div>
+
+            <!-- Python -->
+            <div class="tech-tile" style="background-image: url('Assets/python.jpeg');">
+                <div class="overlay">
+                    <p>Python 🐍</p>
+                    <span>Proficiency: 85%</span>
+                </div>
+            </div>
+
+            <!-- C -->
+            <div class="tech-tile" style="background-image: url('Assets/c.png');">
+                <div class="overlay">
+                    <p>C 💻</p>
+                    <span>Proficiency: 50%</span>
+                </div>
+            </div>
+
+            <!-- C++ -->
+            <div class="tech-tile" style="background-image: url('Assets/cpp.jpeg');">
+                <div class="overlay">
+                    <p>C++ 🛠️</p>
+                    <span>Proficiency: 45%</span>
+                </div>
+            </div>
+
+            <!-- Graphic Design -->
+            <div class="tech-tile" style="background-image: url('Assets/design.jpeg');">
+                <div class="overlay">
+                    <p>Graphic Design 🎨</p>
+                    <span>Proficiency: 75%</span>
+                </div>
+            </div>
+
+            <!-- Photography -->
+            <div class="tech-tile" style="background-image: url('Assets/photography.jpeg');">
+                <div class="overlay">
+                    <p>Photography 📷</p>
+                    <span>Proficiency: 80%</span>
+                </div>
+            </div>
+
+            <!-- UI/UX -->
+            <div class="tech-tile" style="background-image: url('Assets/uiux.jpeg');">
+                <div class="overlay">
+                    <p>UI/UX 🖌️</p>
+                    <span>Proficiency: 70%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div id="aboutme">
+        <div id="heading">About Me</div>
+        <div id="intro">"I’m a B.Tech CSE student at Bharati Vidyapeeth’s College of Engineering, passionate about full-stack development, software engineering, and creative digital experiences. I enjoy building fast, scalable, and interactive web applications.
+            <br>
+            Alongside coding, I explore my creative side through graphic design and photography. Whether it’s designing sleek user interfaces or capturing moments through my lens, I love blending technology with creativity."
+        </div>
+        <button id="readmore">Read More</button>
+
+    </div>
+    <hr class="section-divider">
+    <div id="projectsheading">Featured Projects</div>
+    <div id="projects">
+        <div id="project">
+            <img src="Assets/mindmatters.png" alt="Mind Matters Website">
+            <div class="project-overlay">
+                <h3>Mind Matters</h3>
+                <p>A web app built with React & Firebase to promote mental well-being.</p>
+                <a href="https://github.com/Himank-P/Mind-Matters" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </div>
+        <div id="project">
+            <img src="Assets/setu.png" alt="Setu Website">
+            <div class="project-overlay">
+                <h3>Setu - Student-Alumni Connection</h3>
+                <p>A platform that bridges the gap between students and alumni for networking & mentorship.</p>
+                <a href="https://github.com/Himank-P/Setu" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </div>
+        <div id="project">
+            <img src="" alt="Portfolio Website">
+            <div class="project-overlay">
+                <h3>My Portfolio</h3>
+                <p>A futuristic, cyberpunk-themed portfolio showcasing my work and skills.</p>
+                <a href="" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="photography">
+        <!--For Image Cards-->
+
+        <div class="container">
+            <div class="glowing-box">
+                Captured Moments 📸<br>
+                <button >View More</button>
+            </div>
+            <div class="card">
+                <img src="Assets/15.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/36.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/45.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/37.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/29.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/19.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/17.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/9.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/10.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+            <div class="card">
+                <img src="Assets/35.png" alt="" id="photocard">
+                <div id="locationtag"></div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+<!--Footer-->
+<footer class="footer">
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        <span><i class="fas fa-chevron-up"></i></span>
+    </div>
+    <div class="social-links">
+        <a href="https://www.instagram.com/himankpandoh"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/himank-pandoh-58a0b52b1/"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://github.com/Himank-P"><i class="fa-brands fa-github"></i></a>
+
+        <a href="mailto:himankp121@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a><br>
+        <a href="#">Contact Us</a>
+    </div>
+    <div style="text-align: center; color: #888; font-size: 14px; margin-top: 10px; padding-bottom: 30px;">
+        © 2025 <span style="color: #ffffff;">Himank</span>. All rights reserved.
+    </div>
+</footer>
+<script>
+
+    //For Navbar
+    window.onload = function () {
+        document.getElementById("navbar").style.opacity = "1";
+        document.getElementById("navbar").style.transform = "translateY(0)";
+    };
+
+    function openNav() {
+        document.getElementById("sideNav").style.left = "0";
+    }
+
+    function closeNav() {
+        document.getElementById("sideNav").style.left = "-300px";
+    }
+
+    //For Footer
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+
+    //For Image Cards
+    // Selectors and Variables
+    const container = document.querySelector(".container");
+    const cards = Array.from(document.querySelectorAll(".card"));
+    let removedCards = [];
+    let canSwipe = true; // Prevents rapid swiping
+    let isMouseOver = false; // Track if mouse is over container
+
+    // Adjust offsets for card positions
+    function adjustOffsets() {
+        cards.forEach((card, index) => {
+            let offset = index * 200; // Space between cards
+            card.style.left = `${offset}px`;
+            card.style.zIndex = `${cards.length - index}`; // Ensure top card is above others
+        });
+    }
+
+    // Add hover scale effect to a card
+    function addHoverEffect(card) {
+        card.addEventListener("mouseenter", () => {
+            card.style.transform = "scale(1.05)";
+        });
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "scale(1)";
+        });
+    }
+
+    // Apply hover effect to all initial cards
+    cards.forEach(addHoverEffect);
+
+    // Swipe card logic with delay
+    function swipeCard(direction) {
+        if (!canSwipe) return; // Prevent swipe if delay is active
+        canSwipe = false; // Disable swiping temporarily
+        setTimeout(() => canSwipe = true, 500); // Re-enable after 0.5 seconds
+
+        if (direction === "left" && cards.length > 1) {
+            const topCard = cards.shift(); // Remove the first card
+            removedCards.unshift(topCard); // Add it to the removed stack
+            topCard.style.transform = "translateX(-120%) scale(1)"; // Move out of view and reset scale
+            topCard.style.zIndex = -1; // Push it to the back
+        } else if (direction === "right" && removedCards.length > 0) {
+            const restoredCard = removedCards.shift(); // Restore the last removed card
+            cards.unshift(restoredCard); // Add it back to the active stack
+            restoredCard.style.transform = "translateX(0) scale(1)"; // Reset position and scale
+            restoredCard.style.zIndex = `${cards.length}`; // Ensure correct z-index
+            addHoverEffect(restoredCard); // Reapply hover effect
+        }
+
+        adjustOffsets();
+    }
+
+    // Scroll event listener for swiping cards
+    function handleScroll(event) {
+        if (!canSwipe || !isMouseOver) return; // Prevent swipe if delay is active or mouse is not over container
+        event.preventDefault(); // Prevent page scrolling while scrolling over the container
+
+        if (event.deltaY > 0 && cards.length > 1) { // Scroll down to swipe left
+            swipeCard("left");
+        } else if (event.deltaY < 0) { // Scroll up to swipe right
+            swipeCard("right");
+        }
+    }
+
+    // Detect mouse enter and leave on the container
+    container.addEventListener("mouseenter", () => isMouseOver = true);
+    container.addEventListener("mouseleave", () => isMouseOver = false);
+
+    // Disable page scrolling when hovering over the container
+    document.addEventListener("wheel", (event) => {
+        if (isMouseOver) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    container.addEventListener("wheel", handleScroll, { passive: false });
+
+    // Initial setup
+    adjustOffsets();
+    window.addEventListener("resize", adjustOffsets);
+
+
+
+
+
+
+    //Cursor Glow
+    const glow = document.querySelector('.glow');
+    let lastX = 0, lastY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        glow.style.left = `${e.clientX - 250}px`;
+        glow.style.top = `${e.clientY - 250}px`;
+        glow.style.opacity = 1;
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        glow.style.opacity = 0;
+    });
+
+
+    function homepagenavigate(){
+        window.location.href = "index.html";
+    }
+    function contactme(){
+        window.location.href = "contactme.html"
+    }
+
+</script>
+</body>
+</html>
