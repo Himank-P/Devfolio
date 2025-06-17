@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #000c1d;
+            font-family: Arial, sans-serif;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin: 0px;
+            color: white;
+            animation: fadeIn 1s ease-in-out;
+            padding-right: 10px;
+        }
+
+        /*For Navbar*/
+        .navbar {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            z-index: 1000;
+        }
+        .navbar ul {
+            width: 100%;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar ul li {
+            flex:1;
+            text-align: center;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .menu-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+            padding: 0 10px;
+        }
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: #222;
+            padding-top: 60px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .side-nav a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .side-nav a:hover {
+            background: #444;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+
+        /*Footer*/
+        .footer {
+            position: relative;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-top: 10px;
+            border-top: 10px solid #444; /* Added uniform border */
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 24px;
+        }
+
+        .footer-links a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 10px;
+        }
+
+        .scroll-to-top {
+            position: absolute;
+            top: -40px; /* Adjusted to blend better with footer */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: #444;
+            border-top-left-radius: 80px;
+            border-top-right-radius: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-bottom: 5px solid #444; /* Smooth transition into footer */
+        }
+        .scroll-to-top span {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .glowing-box button:hover{
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 102, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(0, 102, 255, 1);
+            }
+        }
+
+
+        /*Cursor Glow*/
+        .glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.4) 0%, rgba(0, 123, 255, 0) 80%);
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0;
+            transition: opacity 0.2s ease-out, transform 0.1s linear;
+            border-radius: 50%;
+        }
+
+        /*Signature*/
+        #signature{
+            height: 50px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        #signature2{
+            width: 100%;
+        }
+        #signature2span{
+            position: absolute;
+            bottom: 0px;
+            width:100%;
+        }
+
+        #signature3{
+            height: 36px;
+            margin: 0 10px;
+            display: none;
+        }
+
+        @media screen and (max-width: 900px) {
+            .navbar ul {
+                display: none;
+            }
+            .menu-icon {
+                display: block;
+            }
+            #signature3{
+                display: block;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 0 0 8px #5a00d4;
+        }
+
+        p, ul {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #d1d1d1;
+        }
+
+        #about {
+            margin: auto;
+            margin: 0 20px;
+        }
+
+        .glow-line {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, #5a00d4, #8a2be2, #5a00d4);
+            margin: 2rem 0;
+            box-shadow: 0 0 12px #8a2be2;
+        }
+
+        .cta-end {
+            text-align: center;
+            margin-top: 3rem;
+
+        }
+
+        .btn {
+            background: #5a00d4;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        /* Spacing between sections */
+        .about-section > div {
+            margin-bottom: 2rem;
+        }
+
+        /*Tech Stack*/
+
+        @keyframes float {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            font-style: italic;
+
+        }
+
+        #projects.grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .card {
+            background-color: #1f2937;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 15px #5a00d4;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #8a2be2;
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .card ul {
+            list-style: disc inside;
+        }
+        .modal-content {
+            background-color: #1f2937;
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+
+        }
+        #modal.show {
+            display: flex;
+        }
+        .modal-content button {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            color: white;
+        }
+
+        #mywork{
+            position: relative;
+            left:50%;
+            transform: translateX(-50%);
+            max-width: 80vw;
+            width: 500px;
+            text-align: center;
+        }
+
+        .social-links a i{
+    transition: all 0.2s ease;
+}
+.social-links a i:hover{
+    scale: 1.3;
+}
+
+  #glimpse {
+    padding: 60px 20px;
+    background-color: #0b1624;
+    color: white;
+    text-align: center;
+  }
+
+  #glimpse .section-heading {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #f5d3ff;
+  }
+
+  #glimpse .intro-text {
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    color: #cccccc;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    padding: 0 20px;
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover; /* Crops to fit the box */
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-grid img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+  }
+
+    </style>
+</head>
+<body>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!--Cursor Glow-->
+<div class="glow"></div>
+
+
+<!--For Navbar-->
+<div class="navbar" id="navbar">
+    <span class="menu-icon" onclick="openNav()">&#9776;</span>
+    <img src="Assets/signature.png" id="signature3" style="position: relative; right: 0px;" onclick="homepagenavigate()">
+    <ul>
+        <li><a href="aboutme.html">About Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><a href="projects.html">Projects&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><img src="Assets/signature.png" id="signature" onclick="homepagenavigate()"></li>
+        <li><a href="e&a.html">Experience & Achievements</a></li>
+        <li><a href="contactme.html">Contact Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+    </ul>
+</div>
+
+<div class="side-nav" id="sideNav">
+    <span class="close-btn" onclick="closeNav()">&times;</span>
+    <a href="index.html">Home</a>
+    <a href="aboutme.html">About Me</a>
+    <a href="projects.html">Projects</a>
+    <a href="e&a.html">Experience & Achievements</a>
+    <a href="contactme.html">Contact Me</a>
+    <a href="index.html" id="signature2span"><img src="Assets/signature.png" id="signature2" onclick="homepagenavigate()"></a>
+</div>
+<br><br>
+
+<div id="about" class="about-section">
+
+
+    <div class="about-hero" data-aos="fade-up">
+        <h2>Who Am I? 👨‍💻</h2>
+        <p>A passionate developer who loves solving problems through code.</p>
+    </div>
+
+    <hr class="glow-line" data-aos="fade-in" />
+
+    <div class="about-story" data-aos="fade-up">
+        <h2>My Journey 🚀</h2>
+        <p>My coding journey began in high school with JavaScript, and it really took off when I built a voting system for my school’s student council elections. That project was my first real dive into applying code to solve real-world problems, and it pushed me to explore deeper. After that, I picked up C++ to strengthen my programming fundamentals and eventually transitioned into full-stack development with React and Firebase. Right now, I’m focused on building scalable web applications, constantly learning, and working on personal projects that combine design, functionality, and real impact.</p>
+    </div>
+
+    <div class="about-education" data-aos="fade-up" data-aos-delay="100">
+        <h2>Education 🎓</h2>
+        <ul>
+            <li>B.Tech in Computer Science & Engineering (Bharati Vidyapeeth’s College of Engineering, 2024 - Present)</li>
+            <li>Class 12 - PCM (94%) (KC Public School, Jammu)</li>
+        </ul>
+    </div>
+
+    <div class="about-skills" data-aos="fade-up" data-aos-delay="200">
+        <h2>Skills & Tech Stack 🛠️</h2>
+
+        <section class="section floating-icons stack">
+            <p class="hero-subtitle">
+                A glimpse into the tools and technologies I use to build efficient and scalable applications.
+            </p>
+            <a href="projects.html" id="mywork" class="btn">See My Work</a>
+        </section>
+
+        <!-- Tech Stack Grid -->
+        <section id="projects" class="grid">
+            <div class="card" onclick="showModal('Frontend Development')">
+                <h2>Frontend Development</h2>
+                <ul>
+                    <li>React.js</li>
+                    <li>HTML5</li>
+                    <li>CSS3</li>
+                    <li>JavaScript (ES6+)</li>
+                </ul>
+            </div>
+            <div class="card" onclick="showModal('Backend Development')">
+                <h2>Backend Development</h2>
+                <ul>
+                    <li>Node.js</li>
+                    <li>Firebase</li>
+                </ul>
+            </div>
+            <div class="card" onclick="showModal('Programming Languages')">
+                <h2>Programming Languages</h2>
+                <ul>
+                    <li>C</li>
+                    <li>C++</li>
+                    <li>Python</li>
+                </ul>
+            </div>
+            <div class="card" onclick="showModal('Tools & DevOps')">
+                <h2>Tools & DevOps</h2>
+                <ul>
+                    <li>Git</li>
+                    <li>GitHub</li>
+                    <li>Figma</li>
+                    <li>AutoCAD</li>
+                </ul>
+            </div>
+            <div class="card" onclick="showModal('Design & UI/UX')">
+                <h2>Design & UI/UX</h2>
+                <ul>
+                    <li>Figma</li>
+                    <li>Adobe XD</li>
+                </ul>
+            </div>
+        </section>
+
+
+
+    </div>
+
+    <div class="about-fun" data-aos="fade-up" data-aos-delay="300">
+        <h2>Fun Facts 🎉</h2>
+        <ul>
+            <li>I write poetry and do photography in free time.</li>
+            <li>I love participating in hackathons & coding challenges.</li>
+        </ul>
+    </div>
+
+    <section id="glimpse">
+        <h2 class="section-heading">📸 Glimpses Through My Lens</h2>
+        <p class="intro-text">
+            Here's a slice of the world the way I see it. Each photo has a memory, a vibe, a story.
+        </p>
+
+        <div class="gallery-grid">
+            <img src="Assets/1.png" loading="lazy" />
+            <img src="Assets/2.png" loading="lazy" />
+            <img src="Assets/3.png" loading="lazy" />
+            <img src="Assets/4.png" loading="lazy" />
+            <img src="Assets/5.png" loading="lazy" />
+            <img src="Assets/6.png" loading="lazy" />
+            <img src="Assets/7.png" loading="lazy" />
+            <img src="Assets/8.png" loading="lazy" />
+            <img src="Assets/9.png" loading="lazy" />
+            <img src="Assets/10.png" loading="lazy" />
+            <img src="Assets/11.png" loading="lazy" />
+            <img src="Assets/12.png" loading="lazy" />
+            <img src="Assets/13.png" loading="lazy" />
+            <img src="Assets/14.png" loading="lazy" />
+            <img src="Assets/15.png" loading="lazy" />
+            <img src="Assets/16.png" loading="lazy" />
+            <img src="Assets/17.png" loading="lazy" />
+            <img src="Assets/18.png" loading="lazy" />
+            <img src="Assets/19.png" loading="lazy" />
+            <img src="Assets/20.png" loading="lazy" />
+            <img src="Assets/21.png" loading="lazy" />
+            <img src="Assets/22.png" loading="lazy" />
+            <img src="Assets/23.png" loading="lazy" />
+            <img src="Assets/24.png" loading="lazy" />
+            <img src="Assets/25.png" loading="lazy" />
+            <img src="Assets/26.png" loading="lazy" />
+            <img src="Assets/27.png" loading="lazy" />
+            <img src="Assets/28.png" loading="lazy" />
+            <img src="Assets/29.png" loading="lazy" />
+            <img src="Assets/30.png" loading="lazy" />
+            <img src="Assets/31.png" loading="lazy" />
+            <img src="Assets/32.png" loading="lazy" />
+            <img src="Assets/33.png" loading="lazy" />
+            <img src="Assets/34.png" loading="lazy" />
+            <img src="Assets/35.png" loading="lazy" />
+            <img src="Assets/36.png" loading="lazy" />
+            <img src="Assets/37.png" loading="lazy" />
+            <img src="Assets/38.png" loading="lazy" />
+            <img src="Assets/39.png" loading="lazy" />
+            <img src="Assets/40.png" loading="lazy" />
+            <img src="Assets/41.png" loading="lazy" />
+            <img src="Assets/42.png" loading="lazy" />
+            <img src="Assets/43.png" loading="lazy" />
+            <img src="Assets/44.png" loading="lazy" />
+            <img src="Assets/45.png" loading="lazy" />
+            <img src="Assets/46.png" loading="lazy" />
+
+
+            <!-- Add more images as needed -->
+        </div>
+    </section>
+
+
+    <div class="cta-end" data-aos="zoom-in">
+        <h2>🔥 Want to work with me?</h2>
+        <a href="contactme.html" class="btn">Get in Touch</a>
+    </div><br><br>
+
+</div>
+
+
+
+
+<!--Footer-->
+<footer class="footer">
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        <span><i class="fas fa-chevron-up"></i></span>
+    </div>
+    <div class="social-links">
+        <a href="https://www.instagram.com/himankpandoh"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/himank-pandoh-58a0b52b1/"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://github.com/Himank-P"><i class="fa-brands fa-github"></i></a>
+        <a href="mailto:himankp121@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a><br>
+        <a href="#">Contact Us</a>
+    </div>
+    <div style="text-align: center; color: #888; font-size: 14px; margin-top: 10px; padding-bottom: 30px;">
+        © 2025 <span style="color: #ffffff;">Himank</span>. All rights reserved.
+    </div>
+</footer>
+
+<!-- Modal -->
+<div id="modal">
+    <div class="modal-content">
+        <button onclick="closeModal()">✕</button>
+        <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
+        <p id="modal-content">Details about how I used this skill in my projects will go here.</p>
+    </div>
+</div>
+
+
+<script>
+    function showModal(title) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-content').textContent = `Here's how I’ve used ${title} in my projects. (Add real examples here!)`;
+        document.getElementById('modal').classList.add('show');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.remove('show');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('modal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+
+</script>
+<script>
+
+
+    //For Navbar
+    window.onload = function () {
+        document.getElementById("navbar").style.opacity = "1";
+        document.getElementById("navbar").style.transform = "translateY(0)";
+    };
+
+    function openNav() {
+        document.getElementById("sideNav").style.left = "0";
+    }
+
+    function closeNav() {
+        document.getElementById("sideNav").style.left = "-300px";
+    }
+
+    //For Footer
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+
+    //Cursor Glow
+    const glow = document.querySelector('.glow');
+    let lastX = 0, lastY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        glow.style.left = `${e.clientX - 250}px`;
+        glow.style.top = `${e.clientY - 250}px`;
+        glow.style.opacity = 1;
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        glow.style.opacity = 0;
+    });
+
+
+    function homepagenavigate(){
+        window.location.href = "index.html";
+    }
+
+</script>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 100
+    });
+</script>
+</body>
+</html>

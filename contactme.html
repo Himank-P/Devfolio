@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #000c1d;
+            font-family: Arial, sans-serif;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin: 0px;
+            color: white;
+            animation: fadeIn 1s ease-in-out;
+            padding-right: 10px;
+        }
+
+        /*For Navbar*/
+        .navbar {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            z-index: 1000;
+        }
+        .navbar ul {
+            width: 100%;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar ul li {
+            flex:1;
+            text-align: center;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .menu-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+            padding: 0 10px;
+        }
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: #222;
+            padding-top: 60px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .side-nav a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .side-nav a:hover {
+            background: #444;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+
+
+        /*Footer*/
+        .footer {
+            position: relative;
+            left: 0;
+            width: 100vw;
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-top: 10px;
+            border-top: 10px solid #444; /* Added uniform border */
+        }
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 24px;
+        }
+        .footer-links a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 10px;
+        }
+        .scroll-to-top {
+            position: absolute;
+            top: -40px; /* Adjusted to blend better with footer */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: #444;
+            border-top-left-radius: 80px;
+            border-top-right-radius: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-bottom: 5px solid #444; /* Smooth transition into footer */
+        }
+        .scroll-to-top span {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .glowing-box button:hover{
+            background-color: #a046f4;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 102, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(0, 102, 255, 1);
+            }
+        }
+
+
+        /*Cursor Glow*/
+        .glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.4) 0%, rgba(0, 123, 255, 0) 80%);
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0;
+            transition: opacity 0.2s ease-out, transform 0.1s linear;
+            border-radius: 50%;
+        }
+
+        /*Signature*/
+        #signature{
+            height: 50px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        #signature2{
+            width: 100%;
+        }
+        #signature2span{
+            position: absolute;
+            bottom: 0px;
+            width:100%;
+        }
+
+        #signature3{
+            height: 36px;
+            margin: 0 10px;
+            display: none;
+        }
+
+        @media screen and (max-width: 900px) {
+            .navbar ul {
+                display: none;
+            }
+            .menu-icon {
+                display: block;
+            }
+            #signature3{
+                display: block;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .contact-card {
+    background: #1a1a2e;
+    padding: 20px 30px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 250px;
+    box-shadow: 0 0 15px #5a00d4;
+}
+.contact-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #8a2be2;
+}
+
+.form-input {
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background-color: #1e1e3f;
+    color: white;
+    transition: box-shadow 0.3s;
+}
+.form-input:focus {
+    box-shadow: 0 0 10px #5a00d4;
+}
+
+.submit-btn {
+    background-color: #5a00d4;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s;
+}
+.submit-btn:hover {
+    background-color: #8a2be2;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff00ff;
+}
+
+.social-links a i{
+    transition: all 0.2s ease;
+}
+.social-links a i:hover{
+    scale: 1.3;
+}
+    </style>
+</head>
+<body>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<!--Cursor Glow-->
+<div class="glow"></div>
+
+
+<!--For Navbar-->
+<div class="navbar" id="navbar">
+    <span class="menu-icon" onclick="openNav()">&#9776;</span>
+    <img src="Assets/signature.png" id="signature3" style="position: relative; right: 0px;" onclick="homepagenavigate()">
+    <ul>
+        <li><a href="aboutme.html">About Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><a href="projects.html">Projects&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+        <li><img src="Assets/signature.png" id="signature" onclick="homepagenavigate()"></li>
+        <li><a href="e&a.html">Experience & Achievements</a></li>
+        <li><a href="contactme.html">Contact Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+    </ul>
+</div>
+
+<div class="side-nav" id="sideNav">
+    <span class="close-btn" onclick="closeNav()">&times;</span>
+    <a href="index.html">Home</a>
+    <a href="aboutme.html">About Me</a>
+    <a href="projects.html">Projects</a>
+    <a href="e&a.html">Experience & Achievements</a>
+    <a href="contactme.html">Contact Me</a>
+    <a href="index.html" id="signature2span"><img src="Assets/signature.png" id="signature2" onclick="homepagenavigate()"></a>
+</div>
+
+
+<!-- Contact Me Hero Section -->
+<section style="text-align: center; padding: 80px 20px; background: #0b0b2d;">
+    <h1 style="font-size: 2.8rem; color: #5a00d4;">Let's Connect! 👋</h1>
+    <p style="font-size: 1.2rem; color: #ccc; max-width: 600px; margin: 10px auto;">
+        Whether it's a project, collaboration, or just a tech chat—feel free to reach out.
+    </p>
+</section>
+
+<!-- Contact Info Cards -->
+<section style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 40px;">
+    <div class="contact-card" onclick="copyToClipboard('himankp121@gmail.com')">
+        <i class="fas fa-envelope fa-2x"></i>
+        <p>himankp121@gmail.com.com</p>
+    </div>
+    <div class="contact-card" onclick="window.open('https://www.linkedin.com/in/himank-pandoh-58a0b52b1', '_blank')">
+        <i class="fab fa-linkedin fa-2x"></i>
+        <p>linkedin.com/in/himank-pandoh</p>
+    </div>
+    <div class="contact-card" onclick="window.open('https://github.com/Himank-P', '_blank')">
+        <i class="fab fa-github fa-2x"></i>
+        <p>github.com/Himank-P</p>
+    </div>
+    <div class="contact-card">
+        <i class="fas fa-map-marker-alt fa-2x"></i>
+        <p>New Delhi, India</p>
+    </div>
+</section>
+
+<!-- Contact Form -->
+<section style="padding: 50px 20px; transform: translateY(10px); background: #11183a; display: flex; justify-content: center;">
+    <form id="contactForm" style="max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 20px;">
+        <input type="text" placeholder="Your Name" id="name" class="form-input" required>
+        <input type="email" placeholder="Your Email" id="email" class="form-input" required>
+        <textarea placeholder="Your Message" id="message" class="form-input" rows="6" required></textarea>
+        <button type="submit" class="submit-btn">Send Message</button>
+        <p id="form-error" style="color: #ff4b4b; display: none;"></p>
+    </form>
+</section>
+
+
+
+<!--Footer-->
+<footer class="footer">
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        <span><i class="fas fa-chevron-up"></i></span>
+    </div>
+    <div class="social-links">
+        <a href="https://www.instagram.com/himankpandoh"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/himank-pandoh-58a0b52b1/"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://github.com/Himank-P"><i class="fa-brands fa-github"></i></a>
+        <a href="mailto:himankp121@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a><br>
+        <a href="#">Contact Us</a>
+    </div>
+    <div style="text-align: center; color: #888; font-size: 14px; margin-top: 10px; padding-bottom: 30px;">
+        © 2025 <span style="color: #ffffff;">Himank</span>. All rights reserved.
+    </div>
+</footer>
+
+<script>
+
+
+    //For Navbar
+    window.onload = function () {
+        document.getElementById("navbar").style.opacity = "1";
+        document.getElementById("navbar").style.transform = "translateY(0)";
+    };
+
+    function openNav() {
+        document.getElementById("sideNav").style.left = "0";
+    }
+
+    function closeNav() {
+        document.getElementById("sideNav").style.left = "-300px";
+    }
+
+    //For Footer
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+
+    //Cursor Glow
+    const glow = document.querySelector('.glow');
+    let lastX = 0, lastY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        glow.style.left = `${e.clientX - 250}px`;
+        glow.style.top = `${e.clientY - 250}px`;
+        glow.style.opacity = 1;
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        glow.style.opacity = 0;
+    });
+
+
+    function homepagenavigate(){
+        window.location.href = "index.html";
+    }
+
+
+    // Copy to clipboard functionality
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Copied: " + text);
+    });
+}
+
+// Form validation
+document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+    const error = document.getElementById("form-error");
+
+    if (!name || !email || !message) {
+        error.textContent = "Please fill in all fields.";
+        error.style.display = "block";
+        return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+        error.textContent = "Please enter a valid email address.";
+        error.style.display = "block";
+        return;
+    }
+
+    error.style.display = "none";
+    alert("Message sent! 🚀 (Form submission to backend not implemented)");
+    document.getElementById("contactForm").reset();
+});
+
+
+</script>
+
+</body>
+</html>
