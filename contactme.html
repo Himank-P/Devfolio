@@ -319,9 +319,9 @@
 
 <!-- Contact Info Cards -->
 <section style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 40px;">
-    <div class="contact-card" onclick="copyToClipboard('himankp121@gmail.com')">
+    <div class="contact-card" onclick="sendMail()">
         <i class="fas fa-envelope fa-2x"></i>
-        <p>himankp121@gmail.com.com</p>
+        <p>himankp121@gmail.com</p>
     </div>
     <div class="contact-card" onclick="window.open('https://www.linkedin.com/in/himank-pandoh-58a0b52b1', '_blank')">
         <i class="fab fa-linkedin fa-2x"></i>
@@ -339,12 +339,19 @@
 
 <!-- Contact Form -->
 <section style="padding: 50px 20px; transform: translateY(10px); background: #11183a; display: flex; justify-content: center;">
-    <form id="contactForm" style="max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 20px;">
-        <input type="text" placeholder="Your Name" id="name" class="form-input" required>
-        <input type="email" placeholder="Your Email" id="email" class="form-input" required>
-        <textarea placeholder="Your Message" id="message" class="form-input" rows="6" required></textarea>
+
+
+    <form id="contactForm" style="max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 20px;"
+        action="https://formspree.io/f/xzzgwdwq"
+        method="POST"
+        >
+            <input type="text"  placeholder="Your Name"  name="name" id="name" class="form-input" required>
+            <input type="email" placeholder="Your Email" name="email" id="email" class="form-input" required>
+
+            <textarea placeholder="Your Message" name="message" id="message" class="form-input" rows="6" required></textarea>
+
+        <!-- your other form fields go here -->
         <button type="submit" class="submit-btn">Send Message</button>
-        <p id="form-error" style="color: #ff4b4b; display: none;"></p>
     </form>
 </section>
 
@@ -393,6 +400,11 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function sendMail() {
+        copyToClipboard("himankp121@gmail.com")
+        window.location.href = 'mailto:example@example.com';
+    }
+
 
     //Cursor Glow
     const glow = document.querySelector('.glow');
@@ -423,30 +435,7 @@ function copyToClipboard(text) {
     });
 }
 
-// Form validation
-document.getElementById("contactForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
-    const error = document.getElementById("form-error");
 
-    if (!name || !email || !message) {
-        error.textContent = "Please fill in all fields.";
-        error.style.display = "block";
-        return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-        error.textContent = "Please enter a valid email address.";
-        error.style.display = "block";
-        return;
-    }
-
-    error.style.display = "none";
-    alert("Message sent! 🚀 (Form submission to backend not implemented)");
-    document.getElementById("contactForm").reset();
-});
 
 
 </script>
