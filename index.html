@@ -894,86 +894,111 @@
 
     //For Image Cards
     // Selectors and Variables
-    const container = document.querySelector(".container");
-    const cards = Array.from(document.querySelectorAll(".card"));
-    let removedCards = [];
-    let canSwipe = true; // Prevents rapid swiping
-    let isMouseOver = false; // Track if mouse is over container
+const container = document.querySelector(".container");
+const cards = Array.from(document.querySelectorAll(".card"));
+let removedCards = [];
+let canSwipe = true;
+let isMouseOver = false;
 
-    // Adjust offsets for card positions
-    function adjustOffsets() {
-        cards.forEach((card, index) => {
-            let offset = index * 200; // Space between cards
-            card.style.left = `${offset}px`;
-            card.style.zIndex = `${cards.length - index}`; // Ensure top card is above others
-        });
+let touchStartY = 0;
+let touchEndY = 0;
+
+// Detect if user is on mobile
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+// Adjust offsets for card positions
+function adjustOffsets() {
+    cards.forEach((card, index) => {
+        let offset = index * 200;
+        card.style.left = `${offset}px`;
+        card.style.zIndex = `${cards.length - index}`;
+    });
+}
+
+// Add hover effect
+function addHoverEffect(card) {
+    card.addEventListener("mouseenter", () => {
+        card.style.transform = "scale(1.05)";
+    });
+    card.addEventListener("mouseleave", () => {
+        card.style.transform = "scale(1)";
+    });
+}
+cards.forEach(addHoverEffect);
+
+// Swipe logic
+function swipeCard(direction) {
+    if (!canSwipe) return;
+    canSwipe = false;
+    setTimeout(() => canSwipe = true, 500);
+
+    if (direction === "left" && cards.length > 1) {
+        const topCard = cards.shift();
+        removedCards.unshift(topCard);
+        topCard.style.transform = "translateX(-120%) scale(1)";
+        topCard.style.zIndex = -1;
+    } else if (direction === "right" && removedCards.length > 0) {
+        const restoredCard = removedCards.shift();
+        cards.unshift(restoredCard);
+        restoredCard.style.transform = "translateX(0) scale(1)";
+        restoredCard.style.zIndex = `${cards.length}`;
+        addHoverEffect(restoredCard);
     }
 
-    // Add hover scale effect to a card
-    function addHoverEffect(card) {
-        card.addEventListener("mouseenter", () => {
-            card.style.transform = "scale(1.05)";
-        });
-        card.addEventListener("mouseleave", () => {
-            card.style.transform = "scale(1)";
-        });
+    adjustOffsets();
+}
+
+// Scroll-based swipe
+function handleScroll(event) {
+    if (!canSwipe || !isMouseOver) return;
+    event.preventDefault();
+
+    if (event.deltaY > 0 && cards.length > 1) {
+        swipeCard("left");
+    } else if (event.deltaY < 0) {
+        swipeCard("right");
     }
+}
 
-    // Apply hover effect to all initial cards
-    cards.forEach(addHoverEffect);
+// Detect mouse enter and leave
+container.addEventListener("mouseenter", () => isMouseOver = true);
+container.addEventListener("mouseleave", () => isMouseOver = false);
 
-    // Swipe card logic with delay
-    function swipeCard(direction) {
-        if (!canSwipe) return; // Prevent swipe if delay is active
-        canSwipe = false; // Disable swiping temporarily
-        setTimeout(() => canSwipe = true, 500); // Re-enable after 0.5 seconds
-
-        if (direction === "left" && cards.length > 1) {
-            const topCard = cards.shift(); // Remove the first card
-            removedCards.unshift(topCard); // Add it to the removed stack
-            topCard.style.transform = "translateX(-120%) scale(1)"; // Move out of view and reset scale
-            topCard.style.zIndex = -1; // Push it to the back
-        } else if (direction === "right" && removedCards.length > 0) {
-            const restoredCard = removedCards.shift(); // Restore the last removed card
-            cards.unshift(restoredCard); // Add it back to the active stack
-            restoredCard.style.transform = "translateX(0) scale(1)"; // Reset position and scale
-            restoredCard.style.zIndex = `${cards.length}`; // Ensure correct z-index
-            addHoverEffect(restoredCard); // Reapply hover effect
-        }
-
-        adjustOffsets();
+// Prevent page scroll when hovering
+document.addEventListener("wheel", (event) => {
+    if (isMouseOver) {
+        event.preventDefault();
     }
+}, { passive: false });
 
-    // Scroll event listener for swiping cards
-    function handleScroll(event) {
-        if (!canSwipe || !isMouseOver) return; // Prevent swipe if delay is active or mouse is not over container
-        event.preventDefault(); // Prevent page scrolling while scrolling over the container
+container.addEventListener("wheel", handleScroll, { passive: false });
 
-        if (event.deltaY > 0 && cards.length > 1) { // Scroll down to swipe left
+// ✅ Mobile touch swipe logic
+if (isMobile) {
+    container.addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    container.addEventListener("touchend", (e) => {
+        touchEndY = e.changedTouches[0].clientY;
+        let deltaY = touchEndY - touchStartY;
+
+        if (!canSwipe) return;
+
+        if (deltaY < -30 && cards.length > 1) {
+            // Swipe up
             swipeCard("left");
-        } else if (event.deltaY < 0) { // Scroll up to swipe right
+        } else if (deltaY > 30) {
+            // Swipe down
             swipeCard("right");
         }
-    }
+    }, { passive: true });
+}
 
-    // Detect mouse enter and leave on the container
-    container.addEventListener("mouseenter", () => isMouseOver = true);
-    container.addEventListener("mouseleave", () => isMouseOver = false);
-
-    // Disable page scrolling when hovering over the container
-    document.addEventListener("wheel", (event) => {
-        if (isMouseOver) {
-            event.preventDefault();
-        }
-    }, { passive: false });
-
-    container.addEventListener("wheel", handleScroll, { passive: false });
-
-    // Initial setup
-    adjustOffsets();
-    window.addEventListener("resize", adjustOffsets);
-
-
+// Initial setup
+adjustOffsets();
+window.addEventListener("resize", adjustOffsets);
+    
 
 
 
